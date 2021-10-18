@@ -1,0 +1,60 @@
+{
+    "name": "hapi-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "engines": {
+        "node": "14.X"
+    },
+    "scripts": {
+        "lint": "eslint src --color",
+        "lint:fix": "eslint src --color --fix",
+        "start": "NODE_ENV=production node ./dist/main",
+        "start:dev": "nodemon --exec babel-node ./src/main",
+        "build": "babel src --out-dir dist --ignore node_modules",
+        "test": "BABEL_ENV=test jest"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@hapi/bell": "^12.3.0",
+        "@hapi/boom": "^9.1.4",
+        "@hapi/cookie": "^11.0.2",
+        "@hapi/hapi": "^20.2.0",
+        "@hapi/inert": "^6.0.4",
+        "@hapi/vision": "^6.1.0",
+        "dotenv": "^10.0.0",
+        "hapi-auth-jwt2": "^10.2.0",
+        "hapi-pino": "^8.4.0",
+        "hapi-swagger": "^14.2.4",
+        "joi": "^17.4.2",
+        "mongoose": "^6.0.8",
+        "pino": "^6.13.3",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.15.7",
+        "@babel/core": "^7.15.5",
+        "@babel/eslint-parser": "^7.15.7",
+        "@babel/node": "^7.15.4",
+        "@babel/plugin-transform-runtime": "^7.15.0",
+        "@babel/polyfill": "^7.12.1",
+        "@babel/preset-env": "^7.15.6",
+        "@babel/runtime": "^7.15.4",
+        "@types/hapi__boom": "^9.0.1",
+        "@types/jest": "^27.0.2",
+        "@types/joi": "^17.2.3",
+        "@types/mongoose": "^5.11.97",
+        "babel-jest": "^27.2.4",
+        "eslint": "^7.32.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.24.2",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-promise": "^5.1.0",
+        "jest": "^27.2.4",
+        "nodemon": "^2.0.13",
+        "prettier": "^2.4.1"
+    }
+}
