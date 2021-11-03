@@ -1,13 +1,12 @@
 import { Server } from '@hapi/hapi';
-import { common } from './config';
-import plugins from './plugins';
+import plugins from '../plugins';
 
 const registerAllPlugins = async ({ server, plugins }) => {
   //Register all configured plugins
   return Promise.all(plugins.map((exec) => exec(server)));
 };
 
-export const init = async (plugins = []) => {
+export const init = async ({ plugins, config: { common } }) => {
   const server = new Server({
     port: common.port,
     host: common.host,
@@ -25,7 +24,11 @@ export const init = async (plugins = []) => {
 };
 
 export const run = async ({ container }) => {
-  const server = await init(plugins);
+  const config = container.get('Config');
+  const server = await init({
+    config,
+    plugins: plugins.hapi,
+  });
 
   server.decorate('request', 'container', (name) => container.get(name));
 

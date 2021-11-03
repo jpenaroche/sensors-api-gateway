@@ -1,5 +1,3 @@
 import tasks from './tasks';
 
-export default {
-  tasks,
-};
+export default [tasks];

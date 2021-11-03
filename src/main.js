@@ -1,31 +1,27 @@
-import { run } from './server';
-import { database } from './config';
-import { Container, ErrorHandler, connect } from './lib';
-import { TaskService } from './api/services';
-import { TaskRepository } from './api/repositories';
+import transports from './transports';
+import { Container, ErrorHandler, Logger } from './lib';
 import * as config from './config';
 
 const initContainer = () => {
   const container = new Container();
   container.singleton('Config', config);
-  container.singleton('TaskRepository', TaskRepository);
-  container.singleton('TaskService', TaskService, ['TaskRepository']);
+  container.singleton('Logger', Logger);
   return container;
 };
 
 const bootstrap = async () => {
-  //Connecting to Atlas Cluster
-  const db = connect(database);
   const container = initContainer();
-  container.register('Db', db);
-
   return {
     container,
   };
 };
 
 // Bootstrap all connections and send it to server using context definition
-bootstrap().then(run);
+bootstrap().then(async (ctx) => {
+  const logger = ctx.container.get('Logger');
+  await Promise.all([transports.http.run(ctx), transports.mqtt.run(ctx)]);
+  logger.info('Gateway running on all protocols.');
+});
 
 // get the unhandled rejection and throw it to another fallback handler we already have.
 process.on('unhandledRejection', (reason) => {

@@ -6,6 +6,7 @@ const logger = pino({
 });
 
 export class ErrorHandler {
+  // TODO get Logger from container
   static async handleError(err) {
     logger.error(
       err,

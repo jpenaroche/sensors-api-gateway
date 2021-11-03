@@ -1,6 +1,7 @@
-import logger from './logger';
-import swagger from './swagger';
-import auth from './auth';
-import api from './api';
+import hapi from './hapi';
+import mqtt from './mqtt';
 
-export default [swagger, logger, api, auth];
+export default {
+  hapi,
+  mqtt,
+};

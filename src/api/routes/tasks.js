@@ -1,7 +1,7 @@
 import handlers from '../handlers';
 import { Task } from '../schemas/requests';
 
-export const tasks = [
+export default [
   {
     method: 'get',
     path: '/tasks',

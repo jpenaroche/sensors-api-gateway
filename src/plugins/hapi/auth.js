@@ -1,5 +1,5 @@
 import JWT2 from 'hapi-auth-jwt2';
-import { auth } from '../config';
+import { auth } from '../../config';
 
 const validate = async function (decoded, request, h) {
   const { username } = decoded;
