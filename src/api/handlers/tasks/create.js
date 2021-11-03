@@ -1,6 +1,6 @@
 export default async (request, h) => {
-  const service = request.container('TaskService');
+  const bull = request.container('Queue');
+  const task = await bull.add(request.payload.task);
 
-  const task = await service.create(request.payload.task);
   return h.response({ task }).code(201);
 };

@@ -1,11 +1,12 @@
 import transports from './transports';
-import { Container, ErrorHandler, Logger } from './lib';
+import { Container, ErrorHandler, Logger, Queue } from './lib';
 import * as config from './config';
 
 const initContainer = () => {
   const container = new Container();
   container.singleton('Config', config);
   container.singleton('Logger', Logger);
+  container.singleton('Queue', Queue, ['Logger', 'Config']);
   return container;
 };
 
