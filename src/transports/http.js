@@ -3,7 +3,9 @@ import plugins from '../plugins';
 
 const registerAllPlugins = async ({ server, plugins }) => {
   //Register all configured plugins
-  return Promise.all(plugins.map((exec) => exec(server)));
+  for (const exec of plugins) {
+    await exec(server);
+  }
 };
 
 export const init = async ({ plugins, config: { common } }) => {

@@ -11,6 +11,10 @@ export default [
       payload: {
         parse: true,
       },
+      auth: {
+        mode: 'required',
+        strategy: 'session',
+      },
       validate: Task.rules.create,
     },
   },
