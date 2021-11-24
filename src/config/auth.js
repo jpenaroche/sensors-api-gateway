@@ -11,5 +11,12 @@ export default {
       clientId: process.env.AUTH0_CLIENT_ID,
       secret: process.env.AUTH0_SECRET,
     },
+    jwt: {
+      secret: process.env.JWT_SECRET,
+      certificates: {
+        key: process.env.PRIVATE_KEY,
+        public: process.env.PUBLIC_KEY,
+      },
+    },
   },
 };

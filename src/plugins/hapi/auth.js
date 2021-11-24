@@ -1,12 +1,10 @@
 import Bell from '@hapi/bell';
 import Cookie from '@hapi/cookie';
+import JWT2 from 'hapi-auth-jwt2';
 import { auth } from '../../config';
 
-const plugin = {
-  name: 'auth0',
-  version: '1.0.0',
-  register: async function (server) {
-    await server.register(Bell);
+const strategies = {
+  cookie: async (server) => {
     await server.register(Cookie);
 
     server.auth.strategy('session', 'cookie', {
@@ -17,6 +15,10 @@ const plugin = {
       redirectTo: '/login',
     });
 
+    server.auth.default('session');
+  },
+  auth0: async (server) => {
+    await server.register(Bell);
     //Set default session strategy to persist session obtainer from auth0
     server.auth.strategy('auth0', 'bell', {
       provider: 'auth0',
@@ -38,7 +40,7 @@ const plugin = {
           mode: 'try',
           strategy: 'auth0',
         },
-        handler: function (request, h) {
+        handler: async function (request, h) {
           if (!request.auth.isAuthenticated) {
             return `Authentication failed due to: ${request.auth.error.message}`;
           }
@@ -49,16 +51,50 @@ const plugin = {
           // the initial request are passed back via request.auth.credentials.query.
 
           const { profile, token } = request.auth.credentials;
+
+          const Jwt = request.container('Jwt');
+
+          const jwt = await Jwt.signTokenWithPrivateKey({ ...profile }, 36000);
+
           request.cookieAuth.set({
-            token: token,
             userId: profile.id,
+            token,
+            jwt,
           });
 
           return h.redirect('/api');
         },
       },
     });
-    server.auth.default('session');
+  },
+  jwt: async (server) => {
+    await server.register(JWT2);
+    server.auth.strategy('jwt', 'jwt', {
+      key: auth.provider.jwt.secret,
+      validate: (decoded) => {
+        const { sensorId } = decoded;
+        return {
+          isValid: sensorId !== null,
+          credentials: {
+            sensorId,
+          },
+        };
+      },
+      verifyOptions: {
+        ignoreExpiration: true, // do not reject expired tokens
+        algorithms: ['HS256'], // specify your secure algorithm
+      },
+    });
+  },
+};
+
+const plugin = {
+  name: 'auth',
+  version: '1.0.0',
+  register: function (server) {
+    return Promise.all(
+      Object.keys(strategies).map((strategy) => strategies[strategy](server))
+    );
   },
 };
 
